@@ -14,12 +14,14 @@ export async function GET() {
     connectToDB();
 
     const products = await Product.find({});
+    
     if (!products) throw new Error("No products found");
     
     // 1. scrape latest products details and update database
     const updatedProducts = await Promise.all(
       products.map(async (currentProduct) => {
         const scrapedProduct = await scrapeAmazonProduct(currentProduct.url);
+       
         if (!scrapedProduct) throw new Error("No product found");
 
         const updatedPriceHistory = [
